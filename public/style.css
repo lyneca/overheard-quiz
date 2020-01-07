@@ -1,0 +1,110 @@
+ @import url('https://fonts.googleapis.com/css?family=Gelasio|Pacifico&display=swap');
+
+body {
+    font-family: "Open Sans", serif;
+    background-color: #444444;
+    color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-family: "Pacifico", serif;
+    text-align: center;
+    font-size: 4vw;
+    font-weight: normal;
+}
+
+#quote {
+    font-style: italic;
+    font-family: "Gelasio", serif;
+    width: 80%;
+    margin: auto;
+    font-size: 3vw;
+    text-align: center;
+}
+
+#quote::before {
+    content: '“';
+}
+
+#quote::after {
+    content: '”';
+}
+
+p {
+    text-align: center;
+    font-size: 2vw;
+}
+
+
+div#guesses {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+}
+
+div.guess, button {
+    cursor: pointer;
+    user-select: none;
+    flex-grow: 1;
+    text-align: center;
+    padding: 5px;
+    background-color: #555555;
+    border: 3px solid #666666;
+    border-radius: 5px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 10px;
+}
+
+#whodunnit {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: right;
+    width: 80%;
+    margin: auto;
+}
+
+#whodunnit::before {
+    content: "Source: ";
+}
+
+#reset {
+    margin-top: 50px;
+    font-size: 30px;
+    padding: 10px;
+}
+
+.correct {
+    border-color: #669966 !important;
+    background-color: #557755 !important;
+}
+
+
+.incorrect {
+    border-color: #996666 !important;
+    background-color: #775555 !important;
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    #quote {
+        font-size: 25px;
+    }
+
+    #whodunnit {
+        font-size: 10px;
+    }
+
+    p {
+        font-size: 20px;
+    }
+
+    #reset {
+        font-size: 20px;
+    }
+}

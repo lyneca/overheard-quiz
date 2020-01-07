@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Welcome to Firebase Hosting</title>
+
+        <!-- update the version number as needed -->
+        <script defer src="/__/firebase/7.6.1/firebase-app.js"></script>
+        <!-- include only the Firebase features as you need -->
+        <script defer src="/__/firebase/7.6.1/firebase-firestore.js"></script>
+        <!-- initialize the SDK after all desired features are loaded -->
+        <script defer src="/__/firebase/init.js"></script>
+        <link rel="stylesheet" href="style.css" media="all">
+    </head>
+    <body>
+        <h1>NCSS Overheard Quiz</h1>
+        <div id="quote"></div>
+        <div id="whodunnit"></div>
+        <p>Who said it?</p>
+        <div id="guesses">
+            <div class="guess" id="guess-0" data-index=0></div>
+            <div class="guess" id="guess-1" data-index=1></div>
+            <div class="guess" id="guess-2" data-index=2></div>
+        </div>
+        <button id="reset">Hit me up with another spicy one</button>
+        <script>
+            const quoteDiv = document.getElementById('quote');
+            const whodunnitDiv = document.getElementById('whodunnit');
+            const resetDiv = document.getElementById('reset');
+            const guessDivs = [
+                document.getElementById('guess-0'),
+                document.getElementById('guess-1'),
+                document.getElementById('guess-2')
+            ]
+
+            let quotes = [];
+            let users = [];
+            let correctGuess = "";
+            document.addEventListener('DOMContentLoaded', function() {
+                let app = firebase.app();
+                app.firestore().collection('quotes').get()
+                    .then((querySnapshot) => {
+                        quotes = querySnapshot.docs.map(quote => quote.data());
+                        users = [...new Set(querySnapshot.docs.map(quote => quote.data().quotedName))]
+                        resetQuestion();
+                    });
+            });
+
+            function getRandomEntry(list) {
+                return list[Math.floor(Math.random() * list.length)];
+            }
+
+            function renderQuote(quote) {
+                quoteDiv.innerHTML = quote.quote;
+                whodunnitDiv.innerHTML = quote.quoterName;
+            }
+
+            function renderGuesses(guesses) {
+                for (let i = 0; i < 3; i++) {
+                    guessDivs[i].innerHTML = guesses[i]
+                }
+            }
+
+            function resetQuestion() {
+                const quote = getRandomEntry(quotes);
+                renderQuote(quote);
+                const otherGuesses = users.filter(user => user !== quote.quotedName);
+                correctGuess = quote.quotedName;
+                const guessA = getRandomEntry(otherGuesses);
+                const guessB = getRandomEntry(otherGuesses.filter(user => user !== guessA));
+                guesses = [
+                    quote.quotedName,
+                    guessA,
+                    guessB
+                ]
+                guesses.sort(function() { return 0.5 - Math.random() });
+                renderGuesses(guesses);
+                guessDivs.forEach(div => {
+                    div.classList.remove('correct');
+                    div.classList.remove('incorrect');
+                });
+            }
+
+            document.getElementById('reset').onclick = resetQuestion;
+            document.getElementById('guesses').onclick = event => {
+                guessDivs.forEach(div => {
+                    if (div.innerHTML === correctGuess) {
+                        div.classList.add('correct');
+                    } else {
+                        div.classList.add('incorrect');
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
